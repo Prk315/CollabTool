@@ -1,0 +1,16 @@
+# Bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+
+# Env files
+.env
+
+# macOS
+.DS_Store
+
+# VSCode config (optional)
+.vscode/
