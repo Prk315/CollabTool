@@ -9,14 +9,15 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "dev-secret")  # needed for flash()
 
 # --- register blueprints ---
-from backend.routes import users, groups, projects, availability,schedule, calendar, ics_upload
+from backend.routes import users, groups, projects, availability, schedule, calendar, ics_upload
+
 app.register_blueprint(users.bp)
 app.register_blueprint(groups.bp)
 app.register_blueprint(projects.bp)
 app.register_blueprint(availability.bp)
-app.register_blueprint(schedule.bp)  # schedule blueprint handles /schedule and project schedules
-app.register_blueprint(calendar.bp)  # calendar blueprint handles /calendar and API
-app.register_blueprint(ics_upload.bp)  # ICS upload blueprint handles /ics
+app.register_blueprint(schedule.bp)
+app.register_blueprint(calendar.bp)
+app.register_blueprint(ics_upload.bp)   # ← already present but keep this
 
 @app.route("/")
 def home():
