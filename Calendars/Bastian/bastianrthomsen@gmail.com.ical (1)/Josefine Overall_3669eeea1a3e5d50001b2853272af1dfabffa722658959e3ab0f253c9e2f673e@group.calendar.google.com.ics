@@ -1,0 +1,307 @@
+BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Josefine Overall
+X-WR-TIMEZONE:Europe/Copenhagen
+BEGIN:VTIMEZONE
+TZID:Europe/Copenhagen
+X-LIC-LOCATION:Europe/Copenhagen
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:GMT+2
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:GMT+1
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Copenhagen:20241105T160000
+DTEND;TZID=Europe/Copenhagen:20241105T220000
+RRULE:FREQ=WEEKLY;UNTIL=20241126T225959Z
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct6ashoc8qmccb3csrmidpm6lhmqcr970rjgo9
+ j65i70ehh@google.com
+CLASS:PRIVATE
+CREATED:20241112T091642Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p>
+LAST-MODIFIED:20241112T091642Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Kemi
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20241212T160000Z
+DTEND:20241212T170000Z
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct6qt9gchl3coho6hi30dj8cdr7cqpn75o3ecr
+ d69k6mehh@google.com
+CLASS:PRIVATE
+CREATED:20241112T091642Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p>
+LAST-MODIFIED:20241112T091642Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Øve Kemi
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Copenhagen:20241125T163000
+DTEND;TZID=Europe/Copenhagen:20241125T220000
+RRULE:FREQ=DAILY;UNTIL=20241128T225959Z
+EXDATE;TZID=Europe/Copenhagen:20241126T163000
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct72tb2e8om6opi75om8qrcd9n6ur9pdpjmssr
+ 1d5i6aehh@google.com
+CLASS:PRIVATE
+CREATED:20241112T091642Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p>
+LAST-MODIFIED:20241112T091648Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Kemi
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Copenhagen:20241125T163000
+DTEND;TZID=Europe/Copenhagen:20241125T220000
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct72tb2e8om6opi75om8qrcd9n6ur9pdpjmssr
+ 1d5i6aehh@google.com
+RECURRENCE-ID;TZID=Europe/Copenhagen:20241125T163000
+CLASS:PRIVATE
+CREATED:20241112T091642Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p><p>~
+ ~~~~ <a href="https://calendar.google.com/calendar/r/eventedit/cXVicjFjYzI5
+ cWRrbGpub205bmduc2FpZGVfMjAyNDExMjVUMTUzMDAwWiAxMTZjODY3ZWJjODIzZGJlNGFlNDg
+ wYzZmZGE1NmIyYzc3MTVlMDMxYzQzNGM4MzllOWQzMjIyNGJmOWEwNTRmQGdyb3VwLmNhbGVuZG
+ FyLmdvb2dsZS5jb20=?authuser=bastianrthomsen@gmail.com">Event Details</a> ~~
+ ~~~</p>Falstersvej 3-5. Lokale K2 (lokale i kælderen)
+LAST-MODIFIED:20241112T091648Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Kemi
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Copenhagen:20241104T163000
+DTEND;TZID=Europe/Copenhagen:20241104T220000
+RRULE:FREQ=DAILY;UNTIL=20241124T225959Z
+EXDATE;TZID=Europe/Copenhagen:20241119T163000
+EXDATE;TZID=Europe/Copenhagen:20241105T163000
+EXDATE;TZID=Europe/Copenhagen:20241108T163000
+EXDATE;TZID=Europe/Copenhagen:20241112T163000
+EXDATE;TZID=Europe/Copenhagen:20241110T163000
+EXDATE;TZID=Europe/Copenhagen:20241109T163000
+EXDATE;TZID=Europe/Copenhagen:20241115T163000
+EXDATE;TZID=Europe/Copenhagen:20241124T163000
+EXDATE;TZID=Europe/Copenhagen:20241116T163000
+EXDATE;TZID=Europe/Copenhagen:20241117T163000
+EXDATE;TZID=Europe/Copenhagen:20241122T163000
+EXDATE;TZID=Europe/Copenhagen:20241123T163000
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct66qbfepm6ucj3c8p66cjkd5kn2tj8edh70s3
+ 7ddommehh@google.com
+CLASS:PRIVATE
+CREATED:20241112T091642Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p>
+LAST-MODIFIED:20241112T091653Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Kemi
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20241206T113000Z
+DTEND:20241206T153000Z
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct38orbchk6gq1jctij2e3ce1i3ce39e1h6mqb
+ 3dkp78ehh@google.com
+CLASS:PRIVATE
+CREATED:20241206T105406Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p>
+LAST-MODIFIED:20241206T105406Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Kemi Study time
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Copenhagen:20250429T163000
+DTEND;TZID=Europe/Copenhagen:20250429T210000
+RRULE:FREQ=WEEKLY;UNTIL=20250515T215959Z
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct3ic1iego3is3dc9m38d1i70qmst1lchi6kor
+ je5mmeehh@google.com
+CLASS:PRIVATE
+CREATED:20250324T093019Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p>
+LAST-MODIFIED:20250324T093019Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Kemi B
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Copenhagen:20250424T163000
+DTEND;TZID=Europe/Copenhagen:20250424T210000
+RRULE:FREQ=WEEKLY;UNTIL=20250515T215959Z
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct6gr3i6th66thm75lm8pr6cso3esbldspn8pb
+ ed4q6mehh@google.com
+CLASS:PRIVATE
+CREATED:20250324T093040Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p>
+LAST-MODIFIED:20250324T093040Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Kemi B
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Copenhagen:20250128T163000
+DTEND;TZID=Europe/Copenhagen:20250128T210000
+RRULE:FREQ=WEEKLY;UNTIL=20250428T215959Z
+EXDATE;TZID=Europe/Copenhagen:20250415T163000
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct6os9iepnmus1hchij4e9mdtj76thgc4rmme1
+ gd1njgehh@google.com
+CLASS:PRIVATE
+CREATED:20250112T114042Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p>
+LAST-MODIFIED:20250403T134725Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Kemi B
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Copenhagen:20250130T163000
+DTEND;TZID=Europe/Copenhagen:20250130T210000
+RRULE:FREQ=WEEKLY;UNTIL=20250423T215959Z
+EXDATE;TZID=Europe/Copenhagen:20250417T163000
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct3cqhnekomeor1chq68ppo75l66c39ddhj4ob
+ e6tmm6ehh@google.com
+CLASS:PRIVATE
+CREATED:20250112T114122Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p>
+LAST-MODIFIED:20250403T134726Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Kemi B
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20250523T070000Z
+DTEND:20250523T163000Z
+DTSTAMP:20250604T173127Z
+UID:e9im6r31d5miqs35e9pmurj1dgmn6ubecct3es32dloj2c3icpn70spg68p36cbh6dj6etj
+ b6dn6uehh@google.com
+CLASS:PRIVATE
+CREATED:20250523T074304Z
+DESCRIPTION:<i>This event was created by <a href="https://app.reclaim.ai/si
+ gnup?utm_source=calendar&utm_campaign=calendar-referral&utm_medium=calendar
+ -sync-event&utm_term=NpzmI">Reclaim</a>.</i><p>This time has been blocked o
+ n your calendar and is marked as Private. Others will see that you are Busy
+  at this time\, and no other details.</p><p>This description is visible <st
+ rong>only to you</strong> and will not be visible to others who view your c
+ alendar\, except if you've shared your calendar with "make changes to event
+ s" level permissions\, as <a href="https://support.google.com/calendar/answ
+ er/34580?visit_id=637152516861493361-2616211298">outlined here</a>.</p>
+LAST-MODIFIED:20250524T052413Z
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Kemi forberedelse
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
