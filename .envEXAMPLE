@@ -1,0 +1,15 @@
+#Database Settings - Make sure to replace the Password
+DB_USER=postgres
+DB_PASSWORD=123456789
+DB_NAME=collabtool
+DB_HOST=localhost
+DB_PORT=5432
+FLASK_ENV=development
+
+
+# SMTP settings - Make sure to replace USER, PASSWORD and CollabTool
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=test@test.com
+EMAIL_PASSWORD=123456789
+EMAIL_FROM=CollabTool <test@test.com>
