@@ -24,7 +24,8 @@ A Flask-based web application that helps student groups find optimal meeting tim
 ---
 
 ## Getting Started
-
+## Notice windows Users:
+We recommend the use of Powershell for installation
 ### Developer Setup Instructions
 
 Below are the complete steps to set up and run the application:
@@ -35,8 +36,7 @@ Below are the complete steps to set up and run the application:
 - Git
 
 #### Installation
-## Notice windows Users:
-We recommend the use of Powershell for installation
+
 
 1. **Clone the repository** (if you haven't already)
    ```bash
