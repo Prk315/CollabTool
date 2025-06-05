@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects - Student Collaboration Tool{% endblock %}
+
+{% block content %}
+    <h1>Projects</h1>
+    <a href="{{ url_for('projects.new_project') }}" class="btn mb-2">+ New Project</a>
+    
+    <ul class="card-list">
+    {% for pid, name, gname, ddl, hrs in projects %}
+        <li>
+            <h3>
+                <a href="{{ url_for('schedule.project_schedule', project_id=pid) }}">{{ name }}</a>
+            </h3>
+            <p>Group: {{ gname }}</p>
+            <p>Deadline: {{ ddl.strftime('%Y-%m-%d %H:%M') }} | {{ hrs }} hours needed</p>
+            <div class="actions">
+                <a href="{{ url_for('projects.edit_project', project_id=pid) }}" class="btn btn-small">Edit</a>
+                <a href="{{ url_for('projects.suggest_slots', project_id=pid) }}" class="btn btn-small">Suggest Slots</a>
+                <a href="{{ url_for('projects.delete_project', project_id=pid) }}" class="btn btn-small btn-danger">Delete</a>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

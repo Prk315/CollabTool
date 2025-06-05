@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Suggested Slots - {{ pname }}{% endblock %}
+
+{% block content %}
+    <h1>Suggested slots for '{{ pname }}'</h1>
+    <p class="mb-2">Deadline: {{ ddl }} | Need {{ hrs_needed }} hours total</p>
+    
+    {% if suggestions %}
+        <ul class="card-list">
+        {% for s, e in suggestions %}
+            <li>
+                <h3>{{ s.strftime('%Y-%m-%d %H:%M') }} → {{ e.strftime('%H:%M') }}</h3>
+                <p>Duration: {{ ((e-s).total_seconds() // 3600)|int }} hours</p>
+                
+                <form method="POST" action="{{ url_for('projects.book_session', project_id=project_id) }}">
+                    <input type="hidden" name="start" value="{{ s.isoformat() }}">
+                    <input type="hidden" name="end" value="{{ e.isoformat() }}">
+                    <button type="submit" class="btn">Book This Slot</button>
+                </form>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <div class="flash flash-error">
+            <p>No suitable time slots found.</p>
+        </div>
+    {% endif %}
+    
+    <a href="{{ url_for('projects.list_projects') }}" class="back-link">Back to projects</a>
+{% endblock %}

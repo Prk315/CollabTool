@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ group[0] }} - Student Collaboration Tool{% endblock %}
+
+{% block content %}
+    <h1>Group: {{ group[0] }}</h1>
+    <p class="mb-2">{% if group[1] %}{{ group[1] }}{% else %}No description{% endif %}</p>
+
+    <h2>Members</h2>
+    {% if members %}
+        <ul class="card-list">
+            {% for uid, uname in members %}
+            <li>
+                <h3>{{ uname }}</h3>
+                <a href="{{ url_for('calendar.view_calendar', user_id=uid) }}" class="btn btn-small">View Calendar</a>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No members yet.</p>
+    {% endif %}
+
+    <div class="actions mt-2">
+        <a href="{{ url_for('groups.add_member', group_id=group_id) }}" class="btn">Add Member</a>
+        <a href="{{ url_for('groups.group_calendar_view', group_id=group_id) }}" class="btn">Group Calendar</a>
+    </div>
+
+    <a href="{{ url_for('groups.list_groups') }}" class="back-link">Back to groups</a>
+{% endblock %}

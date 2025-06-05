@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Register User - Student Collaboration Tool{% endblock %}
+
+{% block content %}
+    <h1>Register User</h1>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input id="username" name="username" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required>
+        </div>
+        
+        <button type="submit" class="btn">Create User</button>
+    </form>
+    
+    <a href="{{ url_for('users.list_users') }}" class="back-link">Back to users</a>
+{% endblock %}
