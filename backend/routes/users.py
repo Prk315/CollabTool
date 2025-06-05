@@ -3,8 +3,10 @@ from backend.db import SessionLocal
 from backend.models import User
 import logging
 from sqlalchemy.exc import SQLAlchemyError
-
+import re
 bp = Blueprint("users", __name__, url_prefix="/users")
+
+emailpattern = re.compile(r'[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,63}') # Email REGEX pattern
 
 # ---------- LIST USERS ----------
 @bp.route("/")
@@ -27,6 +29,7 @@ def register():
             username = request.form["username"]
             email    = request.form["email"]
             pwd      = request.form["password"]
+            check_email_valid(email)
             with SessionLocal() as db:
                 new = User(username=username, email=email, password=pwd)
                 db.add(new)
@@ -48,6 +51,8 @@ def edit_user(user_id):
                 uname = request.form["username"]
                 mail  = request.form["email"]
                 user  = db.query(User).filter(User.user_id == user_id).first()
+                check_email_valid(mail)
+
                 if user:
                     user.username = uname
                     user.email    = mail
@@ -78,3 +83,12 @@ def delete_user(user_id):
         return f"Database error while deleting user. Please try again later.", 500
         
     return redirect(url_for("users.list_users"))
+
+def check_email_valid(email):
+    if re.fullmatch(emailpattern,email):
+        print("The email was correct! Accepted")
+        logging.info("The email was correct and accepted!")
+    else:
+        print("The email inputtet was incorrect. Not creating the user")
+        logging.error("Could not create a user with that email!")
+        return redirect(url_for("users.list_users"))
