@@ -1,7 +1,7 @@
-# purpose
+# Purpose
 This project is created for the course database and information systems, as seen in forlæsning 1 i am primarily using python combined with flask and postgresql. I have chosen to opt for using external templates for the calendar creation and such, since the frontend of this application isnt truly relevent to the course.
 
-# for my fellow students
+# For my fellow students
 
 flask --app backend.app run         
 
@@ -120,3 +120,7 @@ Below are the complete steps to set up and run the application:
 - The application uses Flask's development server by default. For production, consider using a proper WSGI server like Gunicorn
 - Calendar data (.ics files) can be imported through the appropriate UI in the application
 - User authentication is simple and not production-ready - enhance security before deploying to production
+
+### ER Diagram
+
+![ER Diagram group](https://github.com/user-attachments/assets/c621da30-57ea-4bd4-829e-961760dc2ec7)
