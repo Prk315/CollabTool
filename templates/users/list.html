@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Users - Student Collaboration Tool{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1>Registered Users</h1>
+    <a href="{{ url_for('users.register') }}" class="btn btn-primary">+ New User</a>
+</div>
+
+{% if users %}
+<div class="card">
+    <ul class="list">
+        {% for uid, uname, email in users %}
+        <li class="list-item">
+            <div class="list-item-content">
+                <h3 class="list-item-title">{{ uname }}</h3>
+                <p class="list-item-description">{{ email }}</p>
+            </div>
+            <div class="list-item-actions">
+                <a href="{{ url_for('calendar.view_calendar', user_id=uid) }}" class="btn btn-outline btn-sm">Calendar</a>
+                <a href="{{ url_for('users.edit_user', user_id=uid) }}" class="btn btn-secondary btn-sm">Edit</a>
+                <a href="{{ url_for('users.delete_user', user_id=uid) }}" class="btn btn-destructive btn-sm">Delete</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-content">
+        <p class="text-muted">No users registered yet.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

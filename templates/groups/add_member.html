@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Add Member - {{ group[0] }}{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1>Add Member to {{ group[0] }}</h1>
+    <p class="text-muted">Select a user to add to this group</p>
+</div>
+
+<div class="card" style="max-width: 500px;">
+    <div class="card-content">
+        <form method="POST">
+            <div class="form-group">
+                <label for="user_id" class="form-label">User</label>
+                <select id="user_id" name="user_id" class="form-select" required>
+                    {% for uid, uname in users %}
+                    <option value="{{ uid }}">{{ uname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">Add Member</button>
+                <a href="{{ url_for('groups.view_group', group_id=group_id) }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

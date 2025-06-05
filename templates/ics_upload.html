@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Calendar - ICS{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1>Upload Calendar</h1>
+    <p class="text-muted">Import your calendar data from ICS files to generate availability</p>
+</div>
+
+<div class="card" style="max-width: 500px;">
+    <div class="card-content">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="user_id" class="form-label">User</label>
+                <select name="user_id" id="user_id" class="form-select" required>
+                    {% for uid, uname in users %}
+                    <option value="{{ uid }}">{{ uname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="icsfile" class="form-label">Calendar File (.ics)</label>
+                <input type="file" name="icsfile" id="icsfile" class="form-input" accept=".ics" required>
+                <p class="text-muted text-sm" style="margin-top: 0.5rem;">
+                    Busy times will be extracted from your calendar
+                </p>
+            </div>
+            
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">Upload</button>
+                <a href="{{ url_for('home') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

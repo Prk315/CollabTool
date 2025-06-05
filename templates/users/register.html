@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Register User - Student Collaboration Tool{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1>Register New User</h1>
+    <p class="text-muted">Create a new user account</p>
+</div>
+
+<div class="card" style="max-width: 500px;">
+    <div class="card-content">
+        <form method="POST">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-input" required>
+            </div>
+            
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">Create User</button>
+                <a href="{{ url_for('users.list_users') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

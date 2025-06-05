@@ -1,5 +1,5 @@
 # backend/routes/projects.py
-from flask import Blueprint, render_template_string, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for
 from backend.db import get_db_connection
 from datetime import datetime
 
@@ -16,27 +16,7 @@ def list_projects():
         ORDER BY p.project_id;
     """)
     projects = cur.fetchall(); cur.close(); conn.close()
-    return render_template_string("""
-        <h2>Projects</h2>
-        <a href="{{ url_for('projects.new_project') }}">+ New project</a>
-        <ul>
-        {% for pid, name, gname, ddl, hrs in projects %}
-          <li>
-            <strong>
-              <a href="{{ url_for('schedule.project_schedule', project_id=pid) }}">
-                {{ name }}
-              </a>
-            </strong>
-            (Grp: {{ gname }}) – deadline {{ ddl.strftime('%Y-%m-%d %H:%M') }}
-            – {{ hrs }} h
-            [<a href="{{ url_for('projects.edit_project', project_id=pid) }}">Edit</a>]
-            [<a href="{{ url_for('projects.delete_project', project_id=pid) }}">Del</a>]
-            [<a href="{{ url_for('projects.suggest_slots', project_id=pid) }}">Suggest slots</a>]
-          </li>
-        {% endfor %}
-        </ul>
-        <a href="/">Home</a>
-    """, projects=projects)
+    return render_template("projects/list.html", projects=projects)
 
 # ---------------------------------------------------------------- create project
 @bp.route("/new", methods=["GET", "POST"], endpoint="new_project")
@@ -57,21 +37,7 @@ def new_project():
     cur.execute("SELECT group_id, group_name FROM groups ORDER BY group_name")
     groups = cur.fetchall(); cur.close(); conn.close()
 
-    return render_template_string("""
-        <h2>New Project</h2>
-        <form method="POST">
-            Name:       <input name="name" required><br>
-            Group:      <select name="group_id">
-                          {% for gid,gname in groups %}
-                            <option value="{{ gid }}">{{ gname }}</option>
-                          {% endfor %}
-                        </select><br>
-            Deadline:   <input type="datetime-local" name="deadline" required><br>
-            Hours:      <input type="number" name="hours" min="1" required><br>
-            <button type="submit">Create</button>
-        </form>
-        <a href="{{ url_for('projects.list_projects') }}">Back</a>
-    """, groups=groups)
+    return render_template("projects/new.html", groups=groups)
 
 # ---------------------------------------------------------------- edit project
 @bp.route("/edit/<int:project_id>", methods=["GET", "POST"])
@@ -100,24 +66,7 @@ def edit_project(project_id):
     if not proj:
         return "Not found", 404
 
-    return render_template_string("""
-        <h2>Edit Project</h2>
-        <form method="POST">
-            Name:  <input name="name" value="{{ proj[0] }}"><br>
-            Group: <select name="group_id">
-                     {% for gid,gname in groups %}
-                       <option value="{{ gid }}" {% if gid == proj[1] %}selected{% endif %}>
-                         {{ gname }}
-                       </option>
-                     {% endfor %}
-                   </select><br>
-            Deadline: <input type="datetime-local" name="deadline"
-                      value="{{ proj[2].strftime('%Y-%m-%dT%H:%M') }}"><br>
-            Hours:    <input type="number" name="hours" value="{{ proj[3] }}"><br>
-            <button type="submit">Save</button>
-        </form>
-        <a href="{{ url_for('projects.list_projects') }}">Cancel</a>
-    """, proj=proj, groups=groups)
+    return render_template("projects/edit.html", proj=proj, groups=groups)
 
 # ---------------------------------------------------------------- delete project
 @bp.route("/delete/<int:project_id>")
@@ -130,30 +79,25 @@ def delete_project(project_id):
 # ---------------------------------------------------------------- suggest slots
 @bp.route("/suggest/<int:project_id>")
 def suggest_slots(project_id):
-    """
-    Show up to 5 ≥1-hour windows before the deadline where
-    *all* participants (or, if none, all group members) are free.
-    """
     conn = get_db_connection(); cur = conn.cursor()
-
-    # project meta
-    cur.execute("""
-        SELECT project_name, deadline, estimated_hours_needed, group_id
-        FROM projects WHERE project_id=%s
-    """, (project_id,))
-    row = cur.fetchone()
-    if not row:
+    cur.execute("SELECT project_name, deadline, estimated_hours_needed FROM projects WHERE project_id=%s", (project_id,))
+    proj = cur.fetchone()
+    if not proj:
+        cur.close(); conn.close()
         return "Project not found", 404
-    pname, ddl, hrs_needed, gid = row
+    pname, ddl, hrs_needed = proj
 
-    # participants (fall back to whole group)
-    cur.execute("SELECT user_id FROM participation WHERE project_id=%s", (project_id,))
+    # get all members of the project's group
+    cur.execute("""
+        SELECT u.user_id FROM memberships me
+        JOIN users u ON me.user_id=u.user_id
+        JOIN projects p ON me.group_id=p.group_id
+        WHERE p.project_id=%s
+    """, (project_id,))
     members = [r[0] for r in cur.fetchall()]
     if not members:
-        cur.execute("SELECT user_id FROM memberships WHERE group_id=%s", (gid,))
-        members = [r[0] for r in cur.fetchall()]
-    if not members:
-        return "No participants or group members found."
+        cur.close(); conn.close()
+        return "No members in project", 404
 
     # availability up to deadline
     cur.execute("""
@@ -171,7 +115,7 @@ def suggest_slots(project_id):
     def overlap(a, b):
         s = max(a[0], b[0]); e = min(a[1], b[1])
         return (s, e) if s < e else None
-
+        
     common = per.get(members[0], [])[:]
     for uid in members[1:]:
         new = [ov for a in common for b in per.get(uid, []) if (ov := overlap(a, b))]
@@ -182,30 +126,9 @@ def suggest_slots(project_id):
     suggestions = [(s, e) for s, e in common if (e - s).total_seconds() >= 3600]
     suggestions.sort(); suggestions = suggestions[:5]
 
-    return render_template_string("""
-      <h2>Suggested slots for '{{ pname }}'</h2>
-      <p>Deadline: {{ ddl }} &nbsp; | need {{ hrs_needed }} h total</p>
-      {% if suggestions %}
-        <ul>
-        {% for s, e in suggestions %}
-          <li>
-            {{ s.strftime('%Y-%m-%d %H:%M') }} → {{ e.strftime('%H:%M') }}
-            ({{ ((e-s).total_seconds() // 3600)|int }} h)
-            <form style="display:inline" method="POST"
-                  action="{{ url_for('projects.book_session', project_id=project_id) }}">
-              <input type="hidden" name="start" value="{{ s.isoformat() }}">
-              <input type="hidden" name="end"   value="{{ e.isoformat() }}">
-              <button type="submit">Book</button>
-            </form>
-          </li>
-        {% endfor %}
-        </ul>
-      {% else %}
-        <p><em>No common 1-hour slot before deadline.</em></p>
-      {% endif %}
-      <a href="{{ url_for('projects.list_projects') }}">Back</a>
-    """, pname=pname, ddl=ddl, hrs_needed=hrs_needed,
-       suggestions=suggestions, project_id=project_id)
+    return render_template("projects/suggest.html", 
+                           pname=pname, ddl=ddl, hrs_needed=hrs_needed,
+                           suggestions=suggestions, project_id=project_id)
 
 # ---------------------------------------------------------------- book session
 @bp.route("/book/<int:project_id>", methods=["POST"], endpoint="book_session")

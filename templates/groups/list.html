@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Groups - Student Collaboration Tool{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1>Groups</h1>
+    <a href="{{ url_for('groups.create_group') }}" class="btn btn-primary">+ New Group</a>
+</div>
+
+{% if groups %}
+<div class="card">
+    <ul class="list">
+        {% for gid, gname, desc in groups %}
+        <li class="list-item">
+            <div class="list-item-content">
+                <h3 class="list-item-title">{{ gname }}</h3>
+                <p class="list-item-description">
+                    ID: {{ gid }}
+                    {% if desc %} • {{ desc }}{% endif %}
+                </p>
+            </div>
+            <div class="list-item-actions">
+                <a href="{{ url_for('groups.view_group', group_id=gid) }}" class="btn btn-outline btn-sm">View</a>
+                <a href="{{ url_for('groups.group_calendar_view', group_id=gid) }}" class="btn btn-secondary btn-sm">Calendar</a>
+                <a href="{{ url_for('groups.edit_group', group_id=gid) }}" class="btn btn-secondary btn-sm">Edit</a>
+                <a href="{{ url_for('groups.delete_group', group_id=gid) }}" class="btn btn-destructive btn-sm">Delete</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-content">
+        <p class="text-muted">No groups created yet.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

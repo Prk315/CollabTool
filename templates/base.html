@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Student Collaboration Tool{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .nav-link.active {
+            color: hsl(var(--foreground));
+            font-weight: 600;
+            border-bottom: 2px solid hsl(var(--primary));
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">
+                <a href="{{ url_for('home') }}">CollabTool</a>
+            </h1>
+            <nav class="nav">
+                <a href="{{ url_for('users.list_users') }}" class="nav-link">Users</a>
+                <a href="{{ url_for('groups.list_groups') }}" class="nav-link">Groups</a>
+                <a href="{{ url_for('projects.list_projects') }}" class="nav-link">Projects</a>
+                <a href="{{ url_for('ics_upload.upload_ics') }}" class="nav-link">Upload Calendar</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert {{ 'alert-' + category if category else 'alert-info' }}">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Student Collaboration Tool</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

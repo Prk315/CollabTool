@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}New Project - Student Collaboration Tool{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1>New Project</h1>
+    <p class="text-muted">Create a new project with deadlines and time estimates</p>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <div class="card-content">
+        <form method="POST">
+            <div class="form-group">
+                <label for="name" class="form-label">Project Name</label>
+                <input type="text" id="name" name="name" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="group_id" class="form-label">Group</label>
+                <select id="group_id" name="group_id" class="form-select" required>
+                    {% for gid, gname in groups %}
+                    <option value="{{ gid }}">{{ gname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="deadline" class="form-label">Deadline</label>
+                <input type="datetime-local" id="deadline" name="deadline" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="hours" class="form-label">Estimated Hours Needed</label>
+                <input type="number" id="hours" name="hours" min="1" class="form-input" required>
+            </div>
+            
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">Create Project</button>
+                <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

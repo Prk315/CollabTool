@@ -2,8 +2,9 @@
 import os, smtplib
 from email.message import EmailMessage
 from datetime import datetime, timedelta
+import logging
 
-from backend.db import get_db_connection
+from backend.db import get_db_connection_with_retry
 
 # ---------- config from .env (optional) -------------------------------------
 SMTP_HOST = os.getenv("EMAIL_HOST")
@@ -32,43 +33,51 @@ def send_email(to_addr: str, subject: str, body: str):
 
 def deadline_reminder_job():
     """Find projects with deadline < 24 h and notify participants."""
-    now   = datetime.utcnow()
-    upper = now + timedelta(hours=24)
+    try:
+        now   = datetime.utcnow()
+        upper = now + timedelta(hours=24)
 
-    conn = get_db_connection(); cur = conn.cursor()
+        conn = get_db_connection_with_retry()
+        if not conn:
+            logging.error("Could not connect to database for deadline reminder job")
+            return
 
-    # projects nearing deadline
-    cur.execute(
-        """
-        SELECT p.project_id, p.project_name, p.deadline, g.group_id
-        FROM projects p
-        JOIN groups g ON g.group_id = p.group_id
-        WHERE p.deadline BETWEEN %s AND %s
-        """,
-        (now, upper),
-    )
-    projects = cur.fetchall()
+        cur = conn.cursor()
 
-    for pid, pname, ddl, gid in projects:
-        # participants first
+        # projects nearing deadline
         cur.execute(
-            "SELECT u.email FROM participation pa JOIN users u ON u.user_id = pa.user_id WHERE pa.project_id=%s",
-            (pid,),
+            """
+            SELECT p.project_id, p.project_name, p.deadline, g.group_id
+            FROM projects p
+            JOIN groups g ON g.group_id = p.group_id
+            WHERE p.deadline BETWEEN %s AND %s
+            """,
+            (now, upper),
         )
-        emails = [r[0] for r in cur.fetchall()]
+        projects = cur.fetchall()
 
-        # fall back to whole group
-        if not emails:
+        for pid, pname, ddl, gid in projects:
+            # participants first
             cur.execute(
-                "SELECT u.email FROM memberships m JOIN users u ON u.user_id = m.user_id WHERE m.group_id=%s",
-                (gid,),
+                "SELECT u.email FROM participation pa JOIN users u ON u.user_id = pa.user_id WHERE pa.project_id=%s",
+                (pid,),
             )
             emails = [r[0] for r in cur.fetchall()]
 
-        subject = f"[CollabTool] Project '{pname}' deadline in 24 h"
-        body    = f"Reminder: project '{pname}' is due at {ddl}.\n" \
-                  "Make sure all tasks are wrapped up!"
-        for mail in emails:
-            send_email(mail, subject, body)
+            # fall back to whole group
+            if not emails:
+                cur.execute(
+                    "SELECT u.email FROM memberships m JOIN users u ON u.user_id = m.user_id WHERE m.group_id=%s",
+                    (gid,),
+                )
+                emails = [r[0] for r in cur.fetchall()]
 
-    cur.close(); conn.close()
+            subject = f"[CollabTool] Project '{pname}' deadline in 24 h"
+            body    = f"Reminder: project '{pname}' is due at {ddl}.\n" \
+                    "Make sure all tasks are wrapped up!"
+            for mail in emails:
+                send_email(mail, subject, body)
+
+        cur.close(); conn.close()
+    except Exception as e:
+        logging.error(f"Error in deadline reminder job: {e}")

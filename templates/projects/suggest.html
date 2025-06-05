@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Suggested Slots - {{ pname }}{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1>Suggested Slots for '{{ pname }}'</h1>
+    <p class="text-muted">Deadline: {{ ddl }} • Need {{ hrs_needed }} hours total</p>
+</div>
+
+{% if suggestions %}
+<div class="card mb-6">
+    <div class="card-content">
+        <h3>Available Time Slots</h3>
+        <ul class="list">
+            {% for s, e in suggestions %}
+            <li class="list-item">
+                <div class="list-item-content">
+                    <p class="list-item-title">{{ s.strftime('%Y-%m-%d %H:%M') }} → {{ e.strftime('%H:%M') }}</p>
+                    <p class="list-item-description">{{ ((e-s).total_seconds() // 3600)|int }} hours</p>
+                </div>
+                <div class="list-item-actions">
+                    <form method="POST" action="{{ url_for('projects.book_session', project_id=project_id) }}">
+                        <input type="hidden" name="start" value="{{ s.isoformat() }}">
+                        <input type="hidden" name="end" value="{{ e.isoformat() }}">
+                        <button type="submit" class="btn btn-primary btn-sm">Book</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% else %}
+<div class="card mb-6">
+    <div class="card-content">
+        <div class="alert alert-error">
+            No common 1-hour slot found before deadline.
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline">Back to projects</a>
+{% endblock %}

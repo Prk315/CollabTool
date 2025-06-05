@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Group - {{ grp[0] }}{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1>Edit Group</h1>
+    <p class="text-muted">Update group details</p>
+</div>
+
+<div class="card" style="max-width: 500px;">
+    <div class="card-content">
+        <form method="POST">
+            <div class="form-group">
+                <label for="group_name" class="form-label">Group Name</label>
+                <input type="text" id="group_name" name="group_name" class="form-input" value="{{ grp[0] }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description" class="form-label">Description</label>
+                <textarea id="description" name="description" class="form-textarea">{{ grp[1] }}</textarea>
+            </div>
+            
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{{ url_for('groups.list_groups') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

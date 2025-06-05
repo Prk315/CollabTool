@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Project - {{ proj[0] }}{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1>Edit Project</h1>
+    <p class="text-muted">Update project details and deadlines</p>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <div class="card-content">
+        <form method="POST">
+            <div class="form-group">
+                <label for="name" class="form-label">Project Name</label>
+                <input type="text" id="name" name="name" class="form-input" value="{{ proj[0] }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="group_id" class="form-label">Group</label>
+                <select id="group_id" name="group_id" class="form-select" required>
+                    {% for gid, gname in groups %}
+                    <option value="{{ gid }}" {% if gid == proj[1] %}selected{% endif %}>
+                        {{ gname }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="deadline" class="form-label">Deadline</label>
+                <input type="datetime-local" id="deadline" name="deadline" class="form-input" 
+                       value="{{ proj[2].strftime('%Y-%m-%dT%H:%M') }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="hours" class="form-label">Estimated Hours Needed</label>
+                <input type="number" id="hours" name="hours" min="1" class="form-input" 
+                       value="{{ proj[3] }}" required>
+            </div>
+            
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

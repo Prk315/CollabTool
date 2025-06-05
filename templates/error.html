@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ error }} - CollabTool{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h3>{{ error }}</h3>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{ message }}</p>
+                    
+                    {% if error == "Internal Server Error" %}
+                    <div class="alert alert-warning">
+                        <h5>Possible causes:</h5>
+                        <ul>
+                            <li>Database connection issues - Make sure PostgreSQL is running</li>
+                            <li>Missing database configuration - Check your .env file</li>
+                            <li>Application error - Check the server logs for details</li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mt-4">
+                        <a href="/" class="btn btn-primary">Return to Home</a>
+                        <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

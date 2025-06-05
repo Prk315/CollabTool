@@ -1,5 +1,5 @@
 # backend/routes/ics_upload.py
-from flask import Blueprint, request, render_template_string, redirect, url_for, flash
+from flask import Blueprint, request, render_template, redirect, url_for, flash
 from backend.db import get_db_connection
 from ics import Calendar
 import psycopg2
@@ -79,9 +79,8 @@ def generate_daily_availability(user_id):
 # ---------------------------------------------------------------- upload form
 @bp.route("/upload", methods=["GET", "POST"])
 def upload_ics():
-    conn = get_db_connection(); cur = conn.cursor()
-    cur.execute("SELECT user_id, username FROM users ORDER BY username")
-    users = cur.fetchall()
+    conn = get_db_connection()
+    cur = conn.cursor()
 
     if request.method == "POST":
         user_id = int(request.form["user_id"])
@@ -120,18 +119,10 @@ def upload_ics():
         generate_daily_availability(user_id)
         return redirect(url_for("users.list_users"))
 
-    cur.close(); conn.close()
-    return render_template_string("""
-        <h2>Upload calendar (.ics)</h2>
-        <form method="POST" enctype="multipart/form-data">
-          User:
-          <select name="user_id">
-            {% for uid, uname in users %}
-              <option value="{{ uid }}">{{ uname }}</option>
-            {% endfor %}
-          </select><br><br>
-          <input type="file" name="icsfile" accept=".ics"><br><br>
-          <button type="submit">Upload</button>
-        </form>
-        <a href="/">Home</a>
-    """, users=users)
+    # Get users for the dropdown
+    cur.execute("SELECT user_id, username FROM users ORDER BY username")
+    users = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return render_template("ics_upload.html", users=users)
