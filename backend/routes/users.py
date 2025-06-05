@@ -29,15 +29,18 @@ def register():
             username = request.form["username"]
             email    = request.form["email"]
             pwd      = request.form["password"]
-            check_email_valid(email)
-            with SessionLocal() as db:
-                new = User(username=username, email=email, password=pwd)
-                db.add(new)
-                db.commit()
-            return redirect(url_for("users.list_users"))
+            if check_email_valid(email) == True:
+                with SessionLocal() as db:
+                    new = User(username=username, email=email, password=pwd)
+                    db.add(new)
+                    db.commit()
+                return redirect(url_for("users.list_users"))
+            else:
+                return f"Invalid email was entered! Please try again", 500
+
         except SQLAlchemyError as e:
-            logging.error(f"Database error in register: {str(e)}")
-            return f"Error registering user. Please try again later.", 500
+                logging.error(f"Database error in register: {str(e)}")
+                return f"Error registering user. Please try again later.", 500
 
     return render_template("users/register.html")
 
@@ -51,13 +54,15 @@ def edit_user(user_id):
                 uname = request.form["username"]
                 mail  = request.form["email"]
                 user  = db.query(User).filter(User.user_id == user_id).first()
-                check_email_valid(mail)
+                if check_email_valid(mail) == True:
+                    if user:
+                        user.username = uname
+                        user.email    = mail
+                        db.commit()
+                    return redirect(url_for("users.list_users"))
+                else:
+                    return f"Invalid email was entered! Please try again", 500
 
-                if user:
-                    user.username = uname
-                    user.email    = mail
-                    db.commit()
-                return redirect(url_for("users.list_users"))
 
             user = db.query(User.username, User.email).filter(User.user_id == user_id).first()
     except SQLAlchemyError as e:
