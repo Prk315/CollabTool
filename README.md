@@ -50,7 +50,7 @@ Below are the complete steps to set up and run the application:
    python -m venv venv
    .\venv\Scripts\activate
    # NOTE: Might need to run
-   # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
    # to allow it to run in powershell
 
    # Linux/macOS
