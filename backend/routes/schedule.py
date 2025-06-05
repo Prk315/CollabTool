@@ -1,45 +1,58 @@
-from flask import Blueprint, render_template_string, abort
-from backend.db import get_db_connection
-from datetime import timedelta
+from flask import Blueprint, render_template_string
+from backend.db import SessionLocal
+from backend.models import Project, Participation, Availability
 
 bp = Blueprint("schedule", __name__, url_prefix="/schedule")
 
+# ---------- PROJECT SCHEDULE ----------
 @bp.route("/project/<int:project_id>")
 def project_schedule(project_id):
-    conn = get_db_connection(); cur = conn.cursor()
-    cur.execute("""
-        SELECT p.project_name, p.deadline, p.estimated_hours_needed,
-               g.group_id, g.group_name
-        FROM projects p JOIN groups g ON p.group_id = g.group_id
-        WHERE p.project_id = %s
-    """, (project_id,))
-    row = cur.fetchone()
-    if not row:
-        abort(404)
-    name, deadline, hrs_needed, gid, gname = row
+    with SessionLocal() as db:
+        proj = db.query(Project).filter(Project.project_id == project_id).first()
+        if not proj:
+            return "Project not found", 404
 
-    # pull member availabilities before deadline
-    cur.execute("SELECT user_id FROM memberships WHERE group_id = %s", (gid,))
-    members = [r[0] for r in cur.fetchall()]
-    if not members:
-        return "Group has no members."
+        members = [r[0] for r in
+            db.query(Participation.user_id).filter(Participation.project_id == project_id).all()
+        ]
 
-    cur.execute("""
-        SELECT user_id, start_time, end_time
-        FROM availabilities
-        WHERE user_id = ANY(%s) AND end_time <= %s
-        ORDER BY start_time
-    """, (members, deadline))
-    rows = cur.fetchall(); cur.close(); conn.close()
+        avail_rows = (
+            db.query(Availability.user_id, Availability.start_time, Availability.end_time)
+              .filter(Availability.user_id.in_(members))
+              .order_by(Availability.start_time)
+              .all()
+        )
 
-    # simple “sum every user’s hours” demo
-    total = sum((e - s).total_seconds() for _, s, e in rows) / 3600
-    status = "✅ enough time" if total >= hrs_needed else "❌ short of time"
+    per = {}
+    for uid, s, e in avail_rows:
+        per.setdefault(uid, []).append((s, e))
+
+    def overlap(a, b):
+        s = max(a[0], b[0])
+        e = min(a[1], b[1])
+        return (s, e) if s < e else None
+
+    common = per.get(members[0], [])[:]
+    for uid in members[1:]:
+        slots = per.get(uid, [])
+        new = [
+            ov for a in common for b in slots
+            if (ov := overlap(a, b))
+        ]
+        common = new
+        if not common:
+            break
 
     return render_template_string("""
-        <h2>{{ name }}</h2>
-        <p>Group {{ gname }} – deadline {{ deadline }}</p>
-        <p>Hours needed: {{ hrs_needed }} &nbsp; | &nbsp; hours available (sum): {{ total|round(2) }}</p>
-        <h3>{{ status }}</h3>
-        <a href='/projects/'>Back to projects</a>
-    """, **locals())
+        <h2>Project Schedule: {{ proj.project_name }}</h2>
+        <p>Deadline: {{ proj.deadline }}</p>
+        <h3>Common Availability Blocks</h3>
+        <ul>
+        {% for s, e in common %}
+          <li>{{ s.strftime('%Y-%m-%d %H:%M') }} → {{ e.strftime('%Y-%m-%d %H:%M') }}</li>
+        {% else %}
+          <li><em>No common availability.</em></li>
+        {% endfor %}
+        </ul>
+        <a href="{{ url_for('projects.list_projects') }}">Back to projects</a>
+    """, proj=proj, common=common)

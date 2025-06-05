@@ -1,137 +1,140 @@
-# backend/routes/ics_upload.py
 from flask import Blueprint, request, render_template_string, redirect, url_for, flash
-from backend.db import get_db_connection
+from backend.db import SessionLocal
+from backend.models import BusyTime, Availability
 from ics import Calendar
-import psycopg2
-from datetime import datetime, time
+from datetime import datetime, time as dtime
 
 bp = Blueprint("ics_upload", __name__, url_prefix="/ics")
 
-# -------------------------------------------------------------------- helpers
-def merge_spans(spans):
-    """[(start,end), …] → merged, non-overlapping, sorted list."""
-    if not spans:
-        return []
-    spans.sort()
-    merged = [spans[0]]
-    for s, e in spans[1:]:
-        last_s, last_e = merged[-1]
-        if s <= last_e:               # overlap → extend
-            merged[-1] = (last_s, max(last_e, e))
-        else:
-            merged.append((s, e))
-    return merged
-
-def generate_daily_availability(user_id):
-    """
-    Derive 08:00-20:00 availability for every day that has busy events,
-    subtracting the merged busy spans.
-    Rows are inserted with source='auto'.
-    """
-    conn = get_db_connection(); cur = conn.cursor()
-    cur.execute("""
-        SELECT DATE(start_time), start_time, end_time
-        FROM busy_times
-        WHERE user_id=%s
-        ORDER BY start_time
-    """, (user_id,))
-    rows = cur.fetchall()
-    if not rows:
-        cur.close(); conn.close(); return
-
-    from collections import defaultdict
-    by_day = defaultdict(list)
-    for d, s, e in rows:
-        by_day[d].append((s, e))
-
-    eight   = time(8, 0)
-    twenty  = time(20, 0)
-
-    for day, events in by_day.items():
-        day_start = datetime.combine(day, eight)
-        day_end   = datetime.combine(day, twenty)
-
-        # clip to 08-20 and merge overlaps
-        merged_busy = merge_spans([
-            (max(day_start, s), min(day_end, e))
-            for s, e in events if s < e
-        ])
-
-        cursor = day_start
-        for s, e in merged_busy:
-            if s > cursor:
-                cur.execute("""
-                    INSERT INTO availabilities(user_id,start_time,end_time,source)
-                    VALUES (%s,%s,%s,'auto')
-                    ON CONFLICT DO NOTHING
-                """, (user_id, cursor, s))
-            cursor = max(cursor, e)
-
-        if cursor < day_end:
-            cur.execute("""
-                INSERT INTO availabilities(user_id,start_time,end_time,source)
-                VALUES (%s,%s,%s,'auto')
-                ON CONFLICT DO NOTHING
-            """, (user_id, cursor, day_end))
-
-    conn.commit(); cur.close(); conn.close()
-
-# ---------------------------------------------------------------- upload form
 @bp.route("/upload", methods=["GET", "POST"])
 def upload_ics():
-    conn = get_db_connection(); cur = conn.cursor()
-    cur.execute("SELECT user_id, username FROM users ORDER BY username")
-    users = cur.fetchall()
+    with SessionLocal() as db:
+        users = db.query(
+            # list of (user_id, username)
+            # Use direct User import if needed, but here we pass an example to the template.
+            # Let’s import User:
+            __import__("backend.models", fromlist=["User"])
+        )
+    # Actually, do we need the above? Instead:
+    with SessionLocal() as db:
+        users = db.query(BusyTime.user_id).distinct().all()
+        # But we want actual usernames, so:
+        from backend.models import User
+    with SessionLocal() as db:
+        users = db.query(User.user_id, User.username).order_by(User.username).all()
 
     if request.method == "POST":
         user_id = int(request.form["user_id"])
-        file    = request.files.get("icsfile")
-        if not file or not file.filename.endswith(".ics"):
-            flash("Select a .ics file"); return redirect(request.url)
+        file    = request.files["icsfile"]
+        if not file:
+            flash("No file selected")
+            return redirect(request.url)
 
-        cal     = Calendar(file.stream.read().decode("utf-8"))
-        cal_id  = file.filename.rsplit(".", 1)[0] or "default"
+        text = file.stream.read().decode("utf-8")
+        try:
+            cal = Calendar(text)
+        except Exception:
+            flash("Invalid .ics file")
+            return redirect(request.url)
 
         inserted = 0
-        spans    = []
+        with SessionLocal() as db2:
+            for ev in cal.events:
+                if ev.begin.tzinfo:
+                    start = ev.begin.datetime.astimezone().replace(tzinfo=None)
+                    end   = ev.end.datetime.astimezone().replace(tzinfo=None)
+                else:
+                    start = ev.begin.datetime
+                    end   = ev.end.datetime
 
-        for ev in cal.events:
-            # handle aware / naive datetimes
-            if ev.begin.tzinfo:
-                start = ev.begin.datetime.astimezone().replace(tzinfo=None)
-                end   = ev.end.datetime.astimezone().replace(tzinfo=None)
-            else:
-                start = ev.begin.datetime
-                end   = ev.end.datetime
-            if start >= end:
-                continue
-            spans.append((start, end))
+                desc = ev.name or ev.description or ""
+                busy = BusyTime(
+                    user_id=user_id,
+                    start_time=start,
+                    end_time=end,
+                    description=desc[:250]
+                )
+                db2.add(busy)
+                inserted += 1
+            db2.commit()
 
-        for s, e in merge_spans(spans):
-            cur.execute("""
-                INSERT INTO busy_times(user_id,start_time,end_time,description,calendar_id)
-                VALUES (%s,%s,%s,%s,%s)
-                ON CONFLICT DO NOTHING
-            """, (user_id, s, e, cal_id, cal_id))
-            inserted += 1
-
-        conn.commit(); cur.close(); conn.close()
-        flash(f"Imported {inserted} events from '{file.filename}'.")
+        # After inserting busy_times, compute 08:00–20:00 availability gaps
         generate_daily_availability(user_id)
+
+        flash(f"Imported {inserted} busy events.")
         return redirect(url_for("users.list_users"))
 
-    cur.close(); conn.close()
     return render_template_string("""
-        <h2>Upload calendar (.ics)</h2>
-        <form method="POST" enctype="multipart/form-data">
-          User:
-          <select name="user_id">
-            {% for uid, uname in users %}
-              <option value="{{ uid }}">{{ uname }}</option>
-            {% endfor %}
-          </select><br><br>
-          <input type="file" name="icsfile" accept=".ics"><br><br>
-          <button type="submit">Upload</button>
-        </form>
-        <a href="/">Home</a>
+      <h2>Upload .ics for user</h2>
+      <form method="POST" enctype="multipart/form-data">
+        User:
+        <select name="user_id">
+          {% for uid, uname in users %}
+            <option value="{{ uid }}">{{ uname }}</option>
+          {% endfor %}
+        </select><br><br>
+        <input type="file" name="icsfile" accept=".ics"><br><br>
+        <button type="submit">Upload</button>
+      </form>
+      <a href="/">Home</a>
     """, users=users)
+
+# ---------- helper: derive 08-20 availability each day ----------
+def generate_daily_availability(user_id):
+    """
+    For each day that has at least one busy event, insert the gaps between
+    08:00 and 20:00 as Availability rows (source='auto').
+    """
+    from backend.db import SessionLocal
+
+    with SessionLocal() as db:
+        # Fetch all busy_times for this user, sorted
+        from backend.models import BusyTime
+        rows = db.query(
+            BusyTime.start_time,
+            BusyTime.end_time
+        ).filter(BusyTime.user_id == user_id).order_by(BusyTime.start_time).all()
+
+        if not rows:
+            return
+
+        # Organize by calendar date
+        day_events = {}
+        for s, e in rows:
+            d = s.date()
+            day_events.setdefault(d, []).append((s, e))
+
+        eight  = dtime(hour=8, minute=0)
+        twenty = dtime(hour=20, minute=0)
+
+        for day, events in day_events.items():
+            day_start = datetime.combine(day, eight)
+            day_end   = datetime.combine(day, twenty)
+
+            # Clip each busy event to [08:00, 20:00]
+            clipped = [(max(day_start, s), min(day_end, e)) for s, e in events]
+            clipped = [ev for ev in clipped if ev[0] < ev[1]]
+            clipped.sort()
+
+            cursor = day_start
+            for s, e in clipped:
+                if s > cursor:
+                    av = Availability(
+                        user_id=user_id,
+                        start_time=cursor,
+                        end_time=s,
+                        source="auto"
+                    )
+                    db.add(av)
+                cursor = max(cursor, e)
+
+            if cursor < day_end:
+                av = Availability(
+                    user_id=user_id,
+                    start_time=cursor,
+                    end_time=day_end,
+                    source="auto"
+                )
+                db.add(av)
+
+        db.commit()

@@ -1,1 +1,14 @@
+# virtual environment
+venv/
 .env
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# Editor folders
+.vscode/
+*.swp
