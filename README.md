@@ -38,7 +38,7 @@ Below are the complete steps to set up and run the application:
 
 1. **Clone the repository** (if you haven't already)
    ```bash
-   git clone https://github.com/<your-username>/CollabTool.git
+   git clone https://github.com/Prk315/CollabTool.git
    cd CollabTool
    ```
 
