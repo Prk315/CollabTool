@@ -136,4 +136,5 @@ is the command to run the application and please dont mess with the internal psq
 
 ### ER Diagram
 
-![ER Diagram group](https://github.com/user-attachments/assets/c621da30-57ea-4bd4-829e-961760dc2ec7)
+![newdiagram](https://github.com/user-attachments/assets/4638ff67-1cda-46b4-859f-d8d0f1209a1c)
+
