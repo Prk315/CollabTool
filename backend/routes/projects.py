@@ -2,6 +2,7 @@ from flask import Blueprint, render_template_string, request, redirect, url_for
 from backend.db import SessionLocal
 from backend.models import Project, Group, Participation, WorkSession
 from datetime import datetime
+import re
 
 bp = Blueprint("projects", __name__, url_prefix="/projects")
 
@@ -47,6 +48,11 @@ def new_project():
     with SessionLocal() as db:
         if request.method == "POST":
             name     = request.form["name"]
+            pattern = re.compile("ab*")
+            if re.match(pattern,name):
+                print("Found a pattern match")
+            else:
+                print("Pattern was incorrect")
             group_id = int(request.form["group_id"])
             deadline = datetime.fromisoformat(request.form["deadline"])
             hours    = int(request.form["hours"])
