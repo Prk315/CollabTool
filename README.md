@@ -105,6 +105,11 @@ Below are the complete steps to set up and run the application:
    
    # For development mode with auto-reload
    flask --app backend.app run --debug
+   
+   #NOTICE:
+   # A .env file is required to access the database.
+   # Please refer to the .env file example in the repository
+   # If you are unsure how to add one
    ```
 
 6. **Access the application**
