@@ -1,5 +1,3 @@
-
-
 # purpose
 This project is created for the course database and information systems, as seen in forlæsning 1 i am primarily using python combined with flask and postgresql. I have chosen to opt for using external templates for the calendar creation and such, since the frontend of this application isnt truly relevent to the course.
 
@@ -24,9 +22,101 @@ A Flask-based web application that helps student groups find optimal meeting tim
 
 ---
 
-##Getting Started
+## Getting Started
 
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/<your-username>/student-collab-tool.git
 cd student-collab-tool
+```
+
+### 2. Developer Setup Instructions
+
+Below are the complete steps to set up and run the application:
+
+#### Prerequisites
+- Python 3.10 or higher
+- PostgreSQL (version 13 or higher recommended)
+- Git
+
+#### Installation
+
+1. **Clone the repository** (if you haven't already)
+   ```bash
+   git clone https://github.com/<your-username>/CollabTool.git
+   cd CollabTool
+   ```
+
+2. **Create and activate a virtual environment**
+   ```bash
+   # Windows
+   python -m venv venv
+   venv\Scripts\activate
+
+   # Linux/macOS
+   python -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Database Setup**
+   
+   The application uses PostgreSQL. You'll need to:
+   
+   a. **Run the migration script**
+   ```bash
+   # Windows
+   cd db\migrations
+   .\fixed_migrate.ps1
+   
+   # When prompted, enter your PostgreSQL password for the 'postgres' user
+   # This script will:
+   # - Create the 'collabtool' database if it doesn't exist
+   # - Apply all migrations in the correct order
+   # - Track applied migrations
+   ```
+
+   b. **Alternative manual setup** (if the script doesn't work)
+   ```bash
+   # Create database
+   psql -U postgres -c "CREATE DATABASE collabtool;"
+   
+   # Apply migrations manually
+   cd db/migrations
+   psql -U postgres -d collabtool -f 001_initial_schema.sql
+   psql -U postgres -d collabtool -f 002_calendar_id.sql
+   psql -U postgres -d collabtool -f 003_work_sessions.sql
+   # Continue with any additional migration files
+   ```
+
+5. **Run the application**
+   ```bash
+   # Return to the project root directory if needed
+   cd ../..
+   
+   # Run the Flask application
+   flask --app backend.app run
+   
+   # For development mode with auto-reload
+   flask --app backend.app run --debug
+   ```
+
+6. **Access the application**
+   
+   Open your web browser and navigate to: http://127.0.0.1:5000/
+
+#### Troubleshooting
+
+- **Database Connection Issues**: Make sure PostgreSQL is running and that the connection parameters in the code match your PostgreSQL setup
+- **Migration Errors**: If you encounter issues with migrations, you can manually apply SQL files in the correct order
+- **Import Errors**: Ensure you're running the application from the project root directory and that your virtual environment is activated
+
+### Notes for Developers
+
+- The application uses Flask's development server by default. For production, consider using a proper WSGI server like Gunicorn
+- Calendar data (.ics files) can be imported through the appropriate UI in the application
+- User authentication is simple and not production-ready - enhance security before deploying to production
