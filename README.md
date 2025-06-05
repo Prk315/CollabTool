@@ -1,11 +1,10 @@
 # Purpose
-This project is created for the course database and information systems, as seen in forlæsning 1 i am primarily using python combined with flask and postgresql. I have chosen to opt for using external templates for the calendar creation and such, since the frontend of this application isnt truly relevent to the course.
+This project is created for the course database and information systems. As seen in lecture 1 we are primarily using python combined with flask and postgresql. We have chosen to opt for using external templates for the calendar creation and such, since the frontend of this application isnt truly relevent to the course.
 
-# For my fellow students
-
-flask --app backend.app run         
-
-is the command to run the application and please dont mess with the internal psql postres.
+#Creators
+Bastian Rønfeldt Thomsen - prk315
+Andreas Christian Kærlev - bzd796
+Andreas Lydum Larsen - bfh549
 
 # Student Collaboration Tool
 A Flask-based web application that helps student groups find optimal meeting times and manage project deadlines based on shared availability. Calendar data can be imported via `.ics` files.
@@ -108,6 +107,12 @@ Below are the complete steps to set up and run the application:
 6. **Access the application**
    
    Open your web browser and navigate to: http://127.0.0.1:5000/
+
+# For my fellow students
+
+flask --app backend.app run         
+
+is the command to run the application and please dont mess with the internal psql postres.
 
 #### Troubleshooting
 
