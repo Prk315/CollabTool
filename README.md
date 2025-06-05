@@ -25,13 +25,7 @@ A Flask-based web application that helps student groups find optimal meeting tim
 
 ## Getting Started
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/<your-username>/student-collab-tool.git
-cd student-collab-tool
-```
-
-### 2. Developer Setup Instructions
+### Developer Setup Instructions
 
 Below are the complete steps to set up and run the application:
 
