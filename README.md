@@ -78,6 +78,8 @@ Below are the complete steps to set up and run the application:
    # - Create the 'collabtool' database if it doesn't exist
    # - Apply all migrations in the correct order
    # - Track applied migrations
+
+   # NOTICE: The database collation version might mismatch with the users version. run REFRESH COLLATION VERSION if needed
    ```
 
    b. **Alternative manual setup** (if the script doesn't work)
