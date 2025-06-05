@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Users - Student Collaboration Tool{% endblock %}
+
+{% block content %}
+    <h1>Registered Users</h1>
+    <a href="{{ url_for('users.register') }}" class="btn mb-2">+ New User</a>
+    
+    <ul class="card-list">
+    {% for uid, uname, mail in users %}
+        <li>
+            <h3>{{ uname }}</h3>
+            <p>{{ mail }}</p>
+            <div class="actions">
+                <a href="{{ url_for('calendar.view_calendar', user_id=uid) }}" class="btn btn-small">Calendar</a>
+                <a href="{{ url_for('users.edit_user', user_id=uid) }}" class="btn btn-small">Edit</a>
+                <a href="{{ url_for('users.delete_user', user_id=uid) }}" class="btn btn-small btn-danger">Delete</a>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

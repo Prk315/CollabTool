@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template_string, redirect, url_for, current_app
+from flask import Blueprint, request, render_template, redirect, url_for, current_app
 from backend.db import SessionLocal
 from backend.models import User
 import logging
@@ -17,21 +17,7 @@ def list_users():
         logging.error(f"Database error in list_users: {str(e)}")
         return f"Database connection error. Please check your configuration.", 500
         
-    return render_template_string("""
-        <h2>Registered Users</h2>
-        <a href='{{ url_for("users.register") }}'>+ New user</a>
-        <ul>
-        {% for uid, uname, mail in users %}
-          <li>
-            <strong>{{ uname }}</strong> ({{ mail }}) —
-            <a href='{{ url_for("calendar.view_calendar", user_id=uid) }}'>Calendar</a> |
-            <a href='{{ url_for("users.edit_user",   user_id=uid) }}'>Edit</a> |
-            <a href='{{ url_for("users.delete_user", user_id=uid) }}'>Delete</a>
-          </li>
-        {% endfor %}
-        </ul>
-        <a href='/'>Home</a>
-    """, users=users)
+    return render_template("users/list.html", users=users)
 
 # ---------- REGISTER USER ----------
 @bp.route("/new", methods=["GET", "POST"], endpoint="register")
@@ -50,16 +36,7 @@ def register():
             logging.error(f"Database error in register: {str(e)}")
             return f"Error registering user. Please try again later.", 500
 
-    return render_template_string("""
-        <h2>Register User</h2>
-        <form method='POST'>
-            Username: <input name='username' required><br>
-            Email:    <input name='email' type='email' required><br>
-            Password: <input name='password' type='password' required><br>
-            <button type='submit'>Create</button>
-        </form>
-        <a href='{{ url_for("users.list_users") }}'>Back</a>
-    """)
+    return render_template("users/register.html")
 
 # ---------- EDIT USER ----------
 @bp.route("/edit/<int:user_id>", methods=["GET", "POST"])
@@ -85,15 +62,7 @@ def edit_user(user_id):
     if not user:
         return "User not found", 404
 
-    return render_template_string("""
-        <h2>Edit User</h2>
-        <form method='POST'>
-            Username: <input name='username' value='{{ user[0] }}'><br>
-            Email:    <input name='email'    value='{{ user[1] }}'><br>
-            <button type='submit'>Save</button>
-        </form>
-        <a href='{{ url_for("users.list_users") }}'>Cancel</a>
-    """, user=user)
+    return render_template("users/edit.html", user=user)
 
 # ---------- DELETE USER ----------
 @bp.route("/delete/<int:user_id>")

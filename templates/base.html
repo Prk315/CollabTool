@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Student Collaboration Tool{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="navbar-brand">CollabTool</a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('users.list_users') }}">Users</a></li>
+                <li><a href="{{ url_for('groups.list_groups') }}">Groups</a></li>
+                <li><a href="{{ url_for('projects.list_projects') }}">Projects</a></li>
+                <li><a href="{{ url_for('ics_upload.upload_ics') }}">Calendar Upload</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        <!-- Page content will go here -->
+        {% endblock %}
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

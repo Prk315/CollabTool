@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Groups - Student Collaboration Tool{% endblock %}
+
+{% block content %}
+    <h1>Groups</h1>
+    <a href="{{ url_for('groups.create_group') }}" class="btn mb-2">+ Create New Group</a>
+    
+    <ul class="card-list">
+    {% for gid, gname, desc in groups %}
+        <li>
+            <h3>{{ gname }}</h3>
+            <p>{% if desc %}{{ desc }}{% else %}No description{% endif %}</p>
+            <div class="actions">
+                <a href="{{ url_for('groups.view_group', group_id=gid) }}" class="btn btn-small">View</a>
+                <a href="{{ url_for('groups.edit_group', group_id=gid) }}" class="btn btn-small">Edit</a>
+                <a href="{{ url_for('groups.group_calendar_view', group_id=gid) }}" class="btn btn-small">Calendar</a>
+                <a href="{{ url_for('groups.delete_group', group_id=gid) }}" class="btn btn-small btn-danger">Delete</a>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

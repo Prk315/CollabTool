@@ -1,9 +1,19 @@
-from flask import Flask
+from flask import Flask, render_template
 from dotenv import load_dotenv
 import os
+import logging
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Load environment variables
 load_dotenv()
-app = Flask(__name__)
+
+# Configure app with correct template and static folders
+app = Flask(__name__, 
+           template_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates'),
+           static_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'backend/static'))
 app.secret_key = os.getenv("SECRET_KEY", "dev-secret")
 
 # register blueprints
@@ -42,14 +52,8 @@ if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
 
 @app.route("/")
 def home():
-    return """
-    <h1>Student Collaboration Tool</h1>
-    <ul>
-        <li><a href='/users/'>Users</a></li>
-        <li><a href='/groups/'>Groups</a></li>
-        <li><a href='/projects/'>Projects</a></li>
-        <li><a href='/availability/api/1'>Availabilities (demo)</a></li>
-        <li><a href='/calendar/1'>Calendar (User 1 demo)</a></li>
-        <li><a href='/ics/upload'>Upload calendar (.ics)</a></li>
-    </ul>
-    """
+    try:
+        return render_template('home.html')
+    except Exception as e:
+        logger.error(f"Error rendering home.html: {str(e)}")
+        return f"Error loading the home page: {str(e)}", 500

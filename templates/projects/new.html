@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}New Project - Student Collaboration Tool{% endblock %}
+
+{% block content %}
+    <h1>New Project</h1>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="name">Project Name</label>
+            <input id="name" name="name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="group_id">Group</label>
+            <select id="group_id" name="group_id">
+                {% for gid, gname in groups %}
+                  <option value="{{ gid }}">{{ gname }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="deadline">Deadline</label>
+            <input id="deadline" name="deadline" type="datetime-local" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="hours">Estimated Hours</label>
+            <input id="hours" name="hours" type="number" min="1" required>
+        </div>
+        
+        <button type="submit" class="btn">Create Project</button>
+    </form>
+    
+    <a href="{{ url_for('projects.list_projects') }}" class="back-link">Back to projects</a>
+{% endblock %}
