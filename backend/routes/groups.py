@@ -176,45 +176,78 @@ def group_calendar_view(group_id):
     </body></html>
     """, group_id=group_id, g=g)
 
-# ---------- GROUP CALENDAR (JSON API) ---------------------------------------
+
+# ───────────────────────────────── JSON API ────────────────────────────────
 @bp.route("/api/<int:group_id>")
 def group_calendar_api(group_id):
-    """Return blue blocks where *all* members are free."""
+    """
+    • Blue  = time blocks when *all* group members are free
+    • Purple = booked work-sessions for any project owned by this group
+    """
     conn = get_db_connection(); cur = conn.cursor()
+
+    # -------- members
     cur.execute("SELECT user_id FROM memberships WHERE group_id=%s", (group_id,))
     members = [r[0] for r in cur.fetchall()]
     if not members:
-        cur.close(); conn.close()
-        return jsonify([])
+        cur.close(); conn.close(); return jsonify([])
 
-    cur.execute("""
+    # -------- availabilities
+    cur.execute(
+        """
         SELECT user_id, start_time, end_time
         FROM availabilities
         WHERE user_id = ANY(%s)
         ORDER BY start_time
-    """, (members,))
-    rows = cur.fetchall(); cur.close(); conn.close()
-
+        """,
+        (members,),
+    )
     per = {}
-    for uid, s, e in rows:
+    for uid, s, e in cur.fetchall():
         per.setdefault(uid, []).append((s, e))
 
-    seed = next((slots for slots in per.values() if slots), [])
-    if not seed:
-        return jsonify([])
-
+    # intersect all members
     def overlap(a, b):
         s = max(a[0], b[0]); e = min(a[1], b[1])
         return (s, e) if s < e else None
 
+    seed   = next((slots for slots in per.values() if slots), [])
     common = seed
     for uid in members:
-        slots = per.get(uid, [])
-        new = [ov for a in common for b in slots if (ov := overlap(a, b))]
+        new = [ov for a in common for b in per.get(uid, []) if (ov := overlap(a, b))]
         common = new
         if not common:
             break
 
-    events = [{"title":"ALL free","start":s.isoformat(),"end":e.isoformat(),"color":"blue"}
-              for s, e in common]
-    return jsonify(events)
+    free_events = [
+        {
+            "title": "ALL free",
+            "start": s.isoformat(),
+            "end":   e.isoformat(),
+            "color": "blue",
+        }
+        for s, e in common
+    ]
+
+    # -------- work-sessions for projects of this group
+    cur.execute(
+        """
+        SELECT ws.start_time, ws.end_time, p.project_name
+        FROM work_sessions ws
+        JOIN projects p ON p.project_id = ws.project_id
+        WHERE p.group_id = %s
+        """,
+        (group_id,),
+    )
+    sessions = [
+        {
+            "title": f"Session: {pn}",
+            "start": s.isoformat(),
+            "end":   e.isoformat(),
+            "color": "purple",
+        }
+        for s, e, pn in cur.fetchall()
+    ]
+
+    cur.close(); conn.close()
+    return jsonify(free_events + sessions)

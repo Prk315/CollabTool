@@ -2,6 +2,11 @@
 from flask import Flask
 from dotenv import load_dotenv
 import os
+from datetime import datetime
+
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from backend.reminder import deadline_reminder_job
 
 load_dotenv()
 
@@ -19,6 +24,8 @@ app.register_blueprint(schedule.bp)
 app.register_blueprint(calendar.bp)
 app.register_blueprint(ics_upload.bp)   # ← already present but keep this
 
+
+
 @app.route("/")
 def home():
     return """
@@ -32,3 +39,11 @@ def home():
         <li><a href="/ics/upload">Upload calendar (.ics)</a></li>
     </ul>
     """
+
+
+# ---------------- start background scheduler -------------------
+if os.environ.get("WERKZEUG_RUN_MAIN") == "true":  # avoid double start under reloader
+    scheduler = BackgroundScheduler(daemon=True)
+    scheduler.add_job(deadline_reminder_job, "interval", hours=1,
+                      next_run_time=datetime.utcnow())  # run immediately once
+    scheduler.start()
