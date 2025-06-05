@@ -138,3 +138,5 @@ is the command to run the application and please dont mess with the internal psq
 
 ![newdiagram](https://github.com/user-attachments/assets/4638ff67-1cda-46b4-859f-d8d0f1209a1c)
 
+### Usage of the app
+To use the program, simply add for example users or projects. You can then input the details as needed to add them to the database
