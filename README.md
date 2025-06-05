@@ -35,6 +35,8 @@ Below are the complete steps to set up and run the application:
 - Git
 
 #### Installation
+## Notice windows Users:
+We recommend the use of Powershell for installation
 
 1. **Clone the repository** (if you haven't already)
    ```bash
