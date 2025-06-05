@@ -1,7 +1,7 @@
 # Purpose
 This project is created for the course database and information systems. As seen in lecture 1 we are primarily using python combined with flask and postgresql. We have chosen to opt for using external templates for the calendar creation and such, since the frontend of this application isnt truly relevent to the course.
 
-#Creators
+# Creators
 Bastian Rønfeldt Thomsen - prk315
 Andreas Christian Kærlev - bzd796
 Andreas Lydum Larsen - bfh549
