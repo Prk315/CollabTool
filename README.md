@@ -3,7 +3,9 @@ This project is created for the course database and information systems. As seen
 
 # Creators
 Bastian Rønfeldt Thomsen - prk315
+
 Andreas Christian Kærlev - bzd796
+
 Andreas Lydum Larsen - bfh549
 
 # Student Collaboration Tool
